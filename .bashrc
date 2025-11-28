@@ -8,16 +8,16 @@ iatest=$(expr index "$-" i)
 # fi
 
 # load my bash and aliass
-if [ -f ~/mybash/.mybash ]; then
-  source ~/mybash/.mybash
+if [ -f ~/mybash/mybash.sh ]; then
+  source ~/mybash/mybash.sh
 fi
 
-if [ -f ~/mybash/aliases ]; then
-  source ~/mybash/aliases
+if [ -f ~/mybash/aliases.sh ]; then
+  source ~/mybash/aliases.sh
 fi
 
-if [ -f ~/mybash/functions ]; then
-  source ~/mybash/functions
+if [ -f ~/mybash/functions.sh ]; then
+  source ~/mybash/functions.sh
 fi
 
 # Source global definitions
