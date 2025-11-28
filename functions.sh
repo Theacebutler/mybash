@@ -1,19 +1,4 @@
-#! /usr/bin/env bash
-# echo("loaded mybash")
-# login to ygw network
-# comment this out if loggin in
-# to a diffrent network
-ygw_login 2>/dev/null
-# add mycmd dir to $PATH
-export PATH="$PATH:$HOME/mycmd/"
-export CARGO_TARGET_DIR=/tmp/cargo-install8W9Qjb/
-. /home/avi/.cargo/env
-# To temporarily bypass an #alias, we precede the command with a \
-# EG: the ls command is #aliased, but to use the normal ls command you would type \ls
-
-# Show help for this .bashrc file
-#alias hlp='less ~/.bashrc_help'
-
+#! /usr/bin/bash
 #######################################################
 # SPECIAL FUNCTIONS
 #######################################################
@@ -75,4 +60,27 @@ ftext() {
   # optional: -F treat search term as a literal, not a regular expression
   # optional: -l only print filenames and not the matching lines ex. grep -irl "$1" *
   grep -iIHrn --color=always "$1" . | less -r
+}
+# Extracts any archive(s) (if unp isn't installed)
+extract() {
+  for archive in "$@"; do
+    if [ -f "$archive" ]; then
+      case $archive in
+      *.tar.bz2) tar xvjf $archive ;;
+      *.tar.gz) tar xvzf $archive ;;
+      *.bz2) bunzip2 $archive ;;
+      *.rar) rar x $archive ;;
+      *.gz) gunzip $archive ;;
+      *.tar) tar xvf $archive ;;
+      *.tbz2) tar xvjf $archive ;;
+      *.tgz) tar xvzf $archive ;;
+      *.zip) unzip $archive ;;
+      *.Z) uncompress $archive ;;
+      *.7z) 7z x $archive ;;
+      *) echo "don't know how to extract '$archive'..." ;;
+      esac
+    else
+      echo "'$archive' is not a valid file!"
+    fi
+  done
 }
