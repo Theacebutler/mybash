@@ -1,0 +1,78 @@
+#! /usr/bin/env bash
+# echo("loaded mybash")
+# login to ygw network
+# comment this out if loggin in
+# to a diffrent network
+ygw_login 2>/dev/null
+# add mycmd dir to $PATH
+export PATH="$PATH:$HOME/mycmd/"
+export CARGO_TARGET_DIR=/tmp/cargo-install8W9Qjb/
+. /home/avi/.cargo/env
+# To temporarily bypass an #alias, we precede the command with a \
+# EG: the ls command is #aliased, but to use the normal ls command you would type \ls
+
+# Show help for this .bashrc file
+#alias hlp='less ~/.bashrc_help'
+
+#######################################################
+# SPECIAL FUNCTIONS
+#######################################################
+# Automatically do an ls after each cd, z, or zoxide
+cd() {
+  if [ -n "$1" ]; then
+    builtin cd "$@" && ls
+  else
+    builtin cd ~ && ls
+  fi
+}
+# Create and go to the directory
+mkdirg() {
+  mkdir -p "$1"
+  cd "$1"
+}
+# Move and go to the directory
+mvg() {
+  if [ -d "$2" ]; then
+    mv "$1" "$2" && cd "$2"
+  else
+    mv "$1" "$2"
+  fi
+}
+# Copy and go to the directory
+cpg() {
+  if [ -d "$2" ]; then
+    cp "$1" "$2" && cd "$2"
+  else
+    cp "$1" "$2"
+  fi
+}
+# Copy file with a progress bar
+cpp() {
+  set -e
+  strace -q -ewrite cp -- "${1}" "${2}" 2>&1 |
+    awk '{
+        count += $NF
+        if (count % 10 == 0) {
+            percent = count / total_size * 100
+            printf "%3d%% [", percent
+            for (i=0;i<=percent;i++)
+                printf "="
+            printf ">"
+            for (i=percent;i<100;i++)
+                printf " "
+            printf "]\r"
+        }
+    }
+    END { print "" }' total_size="$(stat -c '%s' "${1}")" count=0
+}
+# Searches for text in all files in the current folder
+ftext() {
+  # -i case-insensitive
+  # -I ignore binary files
+  # -H causes filename to be printed
+  # -r recursive search
+  # -n causes line number to be printed
+  # optional: -F treat search term as a literal, not a regular expression
+  # optional: -l only print filenames and not the matching lines ex. grep -irl "$1" *
+  grep -iIHrn --color=always "$1" . | less -r
+}
